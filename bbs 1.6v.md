@@ -217,8 +217,6 @@ Lombok은 Getter/Setter, toString(), 생성자 등을 애노테이션만 추가�
 
 
 
-
-
 #### Oracle 설치
 
 ##### Oracle 18 XE 설치
@@ -390,6 +388,8 @@ public class DataSourceTest {
 추가예정
 
 
+
+
 #### 종합 설정 연습문제
 
 1. 프로젝트명 `spring-practice02` 로 새로운 스프링 레거시 프로젝트를 생성한다.
@@ -423,4 +423,41 @@ public class DataSourceTest {
 | /board/detail | GET    | 게시글 상세보기 화면 |
 | /board/modify | GET    | 게시글 수정 화면     |
 | /board/write  | GET    | 게시글 작성 화면     |
+
+
+
+
+
+#### 게시판 데이터베이스 설계
+
+```sql
+CREATE TABLE TBL_MEMBER (
+    MNO NUMBER(10, 0) PRIMARY KEY, -- PK 회원 번호
+    ID VARCHAR2(255) NOT NULL UNIQUE, -- 아이디 (중복 불가능)
+    PASSWORD VARCHAR2(255) NOT NULL, -- 비밀번호
+    NICKNAME VARCHAR2(255) NOT NULL UNIQUE, -- 닉네임 (중복 불가능)
+    INSERT_DATE DATE DEFAULT SYSDATE, -- 등록날짜
+    UPDATE_DATE DATE DEFAULT NULL -- 수정날짜
+);
+
+CREATE TABLE TBL_BOARD ( 
+    BNO NUMBER(10, 0) PRIMARY KEY, -- PK 게시글 번호,
+    MNO NUMBER(10, 0) NOT NULL, -- FK 회원 번호
+    TITLE VARCHAR2(255) NOT NULL, -- 제목
+    CONTENT VARCHAR2(2048) NOT NULL, -- 내용 
+    HIT NUMBER(10, 0) DEFAULT 0, -- 조회수
+    INSERT_DATE DATE DEFAULT SYSDATE, -- 등록날짜
+    UPDATE_DATE DATE DEFAULT NULL, -- 수정날짜
+    CONSTRAINT FK_BOARD FOREIGN KEY(MNO) -- MNO를 FK 설정
+    REFERENCES TBL_MEMBER(MNO)
+);
+
+CREATE TABLE TBL_REPLY (
+    RNO NUMBER(10, 0) PRIMARY KEY, -- PK 댓글 번호
+    BNO NUMBER(10, 0) NOT NULL, -- FK 게시글 번호
+    MNO NUMBER(10, 0) NOT NULL, -- FK 회원 번호
+    
+);
+
+```
 
